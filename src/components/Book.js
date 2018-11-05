@@ -20,7 +20,7 @@ class Book extends React.Component{
                                 <option value="currentlyReading">Currently Reading shelf</option>
                                 <option value="wantToRead">I Want to Read shelf</option>
                                 <option value="read">I have Read shelf</option>
-                                <option value="none">Remove from Shelves</option>
+                                <option value="none">None</option>
                               </select>
                             </div>
                           </div>

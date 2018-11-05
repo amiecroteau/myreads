@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import * as BooksInfo from '../../BooksInfo';
 import Book from '../Book';
+import Shelf from '../Shelf';
 
 
 
@@ -15,6 +16,15 @@ class LibrarySearch extends React.Component{
       query: ''
     };
   
+ constructor(props){
+    super(props);
+  
+   BooksInfo.getAll().then(response =>{
+      this.setState({books:[]});
+     
+  
+    });
+  }
  
 //Set the entry as query and submit to to the submit search function    
 updateQuery  (query) {
@@ -24,15 +34,7 @@ updateQuery  (query) {
  
 }
 
-modifyBook=(book,shelf)=>{	
-    BooksInfo.update(book,shelf)	
-      .then(response =>{	
-        book.shelf = shelf;	
-        this.setState (state => ({	
-          books: state.books.filter(b => b.id !== book.id).concat([book])	
-        }));	
-        });	
-  }
+
 
 
 //test the query with the values in the Books API data
@@ -41,7 +43,7 @@ submitSearch(){
    const query = this.state.query
 //utilized ryan waite walkthrough for the filtering logic and the render function below  
   if(query === '' || query === undefined){
-    return this.setState ({ results: []});
+    return this.setState ({ books: []});
    
   }else{
     
@@ -61,6 +63,8 @@ submitSearch(){
               if(f[0]) {
                 
                 b.shelf = f[0].shelf;
+               
+      
               }
             });
             return this.setState({ results: response });
@@ -69,7 +73,17 @@ submitSearch(){
       }
 }
 
-
+ modifyBook=(book,shelf)=>{
+    BooksInfo.update(book,shelf)
+      .then(response =>{
+        book.shelf = shelf;
+        this.setState (state => ({
+      //logic from ryan waite tutorial walkthrough
+          books: state.books.filter(b => b.id !== book.id).concat([book])
+          
+        }));
+        });
+  }
  
 
   
@@ -89,10 +103,32 @@ submitSearch(){
       <input type = "text" placeholder = "Search by title or author" value={query} onChange={(event) => this.updateQuery(event.target.value)}/ >
 
           </div > </div> <div className = "search-results" >
-          <
+          <div className="list-books">
+            <div className="list-books-title">
+              <h1>Library Search Shelves</h1>
+            </div>
+            <div className="list-books-content">
+              <div>
+               
+                <Shelf modifyBook={this.modifyBook} name="Currently Reading" books={this.state.books.filter(b => b.shelf === "currentlyReading")} />
+
+                <Shelf modifyBook={this.modifyBook}  name="I Want to Read" books={this.state.books.filter(b => b.shelf === "wantToRead")} />
+                 
+                <Shelf modifyBook={this.modifyBook} name="I have Read" books={this.state.books.filter(b => b.shelf === "read")} />    
+              </div>
+            </div>
+
+            <div className="open-search">
+              <Link to="/search"><p>Add a book</p></Link>
+            </div>
+          </div>
+            <
           ol className = "grid" > 
             {
               results.map((book, key) => <Book modifyBook={this.modifyBook} book={book} key={key} />)
+           
+               
+        
             }
             
             

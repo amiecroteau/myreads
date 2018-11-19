@@ -7,9 +7,11 @@ import {
 } from 'react-router-dom'
 
 
-import Main from './components/pages/Main';
+import Main from './components/Main';
 
-import LibrarySearch from './components/pages/LibrarySearch';
+import LibrarySearch from './components/LibrarySearch';
+
+
 //imports all the pages to interact together on the application
 //so they all can render at the same time
 class BooksApp extends React.Component {
@@ -28,8 +30,7 @@ class BooksApp extends React.Component {
       }
       /> 	
 
-      <
-      /div >
+      </div >
     );
 
 

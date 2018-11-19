@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import * as BooksInfo from '../../BooksInfo';
-import Book from '../Book';
-import Shelf from '../Shelf';
+import * as BooksInfo from '../BooksInfo';
+import Book from './Book';
+import Shelf from './Shelf';
 
 
 
@@ -10,20 +10,24 @@ import Shelf from '../Shelf';
 class LibrarySearch extends React.Component{
 //sets the state to the page from the search block to accept arrays
    
-  state= {
-      books:[],
-      results: [],
-      query: ''
-    };
+  state = {
+    books: [],
+    results: [],
+    query: ''
+  };
+  get state() {
+    return this._state;
+  }
+  set state(value) {
+    this._state = value;
+  }
   
  constructor(props){
     super(props);
   
-   BooksInfo.getAll().then(response =>{
-      this.setState({books:[]});
-     
-  
-    });
+   BooksInfo.getAll().then(() => {
+     this.setState({ books: [] });
+   });
   }
  
 //Set the entry as query and submit to to the submit search function    
@@ -59,36 +63,53 @@ submitSearch(){
           const Bfilter = this.state.books  
             response.forEach(b => {
               
-              let f = Bfilter.filter(B => B.id === b.id);
+              let f = Bfilter.filter(B => B.id == b.id);
               if(f[0]) {
                 
                 b.shelf = f[0].shelf;
                
       
               }
+              else{
+                return this.newMethod;
+              }
             });
+
+            this.newMethod();
             return this.setState({ results: response });
           }
         });
       }
 }
 
- modifyBook=(book,shelf)=>{
-    BooksInfo.update(book,shelf)
-      .then(response =>{
+ modifyBook = (book, shelf) => {
+    BooksInfo.update(book, shelf)
+      .then(response => {
         book.shelf = shelf;
-        this.setState (state => ({
-      //logic from ryan waite tutorial walkthrough
-          books: state.books.filter(b => b.id !== book.id).concat([book])
-          
+        this.setState(state => ({
+          books: state.books.filter(b => b.id == book.id).concat([book])
+       
         }));
-        });
-  }
- 
+      });
+  };
 
-  
-   
-     //utilized ryan waite walkthrough for the filtering logic and the render function below
+  get modifyBook() {
+    return this._modifyBook;
+  }
+  set modifyBook(value) {
+    this._modifyBook = value;
+  }
+  newMethod() {
+    function mapStateToProps(state) {
+      return {
+        book: state.book,
+        shelf: state.shelf
+      };
+    }
+  }
+
+
+
 	
 	render(){
     const {query, results} = this.state
@@ -106,35 +127,34 @@ submitSearch(){
           <div className="list-books">
             <div className="list-books-title">
               <h1>Library Search Shelves</h1>
+              <p>Keep in mind the selections made here will appear on your main shelves</p>
             </div>
             <div className="list-books-content">
               <div>
                
-                <Shelf modifyBook={this.modifyBook} name="Currently Reading" books={this.state.books.filter(b => b.shelf === "currentlyReading")} />
+                <Shelf set modifyBook={this.newMethod} name="Currently Reading" books={this.state.books.filter(b => b.shelf == "currentlyReading")} />
 
-                <Shelf modifyBook={this.modifyBook}  name="I Want to Read" books={this.state.books.filter(b => b.shelf === "wantToRead")} />
+                <Shelf set modifyBook={this.newMethod}  name="I Want to Read" books={this.state.books.filter(b => b.shelf == "wantToRead")} />
                  
-                <Shelf modifyBook={this.modifyBook} name="I have Read" books={this.state.books.filter(b => b.shelf === "read")} />    
+                <Shelf set modifyBook={this.newMethod} name="I have Read" books={this.state.books.filter(b => b.shelf == "read")} />    
               </div>
             </div>
 
             <div className="open-search">
-              <Link to="/search"><p>Add a book</p></Link>
+              <Link to="/search">></Link>
             </div>
           </div>
-            <
-          ol className = "grid" > 
+            <ol className = "grid" > 
             {
-              results.map((book, key) => <Book modifyBook={this.modifyBook} book={book} key={key} />)
+              results.map((book, key) => 
+              <Book set modifyBook={this.modifyBook} book={book} key={key} />)
            
                
         
             }
             
             
-          < /ol> < /
-          div > <
-          /div>
+        </ol> </div > </div>
 		);
 		
 	}

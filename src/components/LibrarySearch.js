@@ -111,7 +111,7 @@ submitSearch(){
   newMethod() {
     function mapStateToProps(state) {
       return {
-        book: state.book,
+        book: state.book, 
         shelf: state.shelf
       };
     }

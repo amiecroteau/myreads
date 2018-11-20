@@ -56,11 +56,13 @@ class Main extends React.Component{
         <div className="list-books-content">
           <div>
             <shelf />
-            <Shelf set modifyBook={this.modifyBook} name="Currently Reading" books={this.state.books.filter(b => b.shelf == "currentlyReading")} />
+            <Shelf set modifyBook={this.modifyBook} name="Currently Reading" books={this.state.books.filter(b => b.shelf === "currentlyReading")} />
 
-            <Shelf set modifyBook={this.modifyBook} name="I Want to Read" books={this.state.books.filter(b => b.shelf == "wantToRead")} />
+            <Shelf set modifyBook={this.modifyBook} name="I Want to Read" books={this.state.books.filter(b => b.shelf === "wantToRead")} />
 
-            <Shelf set modifyBook={this.modifyBook} name="I have Read" books={this.state.books.filter(b => b.shelf == "read")} />
+            <Shelf set modifyBook={this.modifyBook} name="I have Read" books={this.state.books.filter(b => b.shelf === "read")} />
+            
+           
           </div>
         </div>
 

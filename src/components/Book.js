@@ -32,7 +32,7 @@ class Book extends React.Component{
                             <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url("${this.props.book.imageLinks  && this.props.book.imageLinks.thumbnail}")`
                             }}></div>
                             <div className="book-shelf-changer">
-                              <select value={this.props.shelf || "none"} onChangeCapture={(event) =>{ const newShelf = newBook.modifyBook(newBook.book, event.target.value);}}>
+                              <select value={this.props.book.shelf || "none"} onChange={(event) =>{ const newShelf = newBook.modifyBook(newBook.book, event.target.value);}}>
                                 newShelf;
                                 <option value="move" disabled>Move book to...</option>
                                 <option value="currentlyReading">Currently Reading shelf</option>

@@ -18,7 +18,7 @@ const newShelf = this.props;
                   <div className="shelf-books">
                     <ol className="grid">
                       {
-                        this.props.books.map((book, key) => 
+                        newShelf.books.map((book, key) => 
                         <Book set modifyBook={newShelf.modifyBook}  book={book} key={key} /> )
                       
                       }

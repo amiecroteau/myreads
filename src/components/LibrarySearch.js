@@ -9,12 +9,19 @@ import Shelf from './Shelf';
 
 class LibrarySearch extends React.Component{
 //sets the state to the page from the search block to accept arrays
-   
-  state = {
+  constructor(props){ 
+    super(props);
+  this.state = {
     books: [],
     results: [],
-    query: ''
+    query: '',
+    response:''
   };
+  BooksInfo.getAll().then(() => {
+    this.setState({ books: [] });
+  });
+
+}
   get state() {
     return this._state;
   }
@@ -22,13 +29,10 @@ class LibrarySearch extends React.Component{
     this._state = value;
   }
   
- constructor(props){
-    super(props);
+
   
-   BooksInfo.getAll().then(() => {
-     this.setState({ books: [] });
-   });
-  }
+  
+  
  
 //Set the entry as query and submit to to the submit search function    
 updateQuery  (query) {
@@ -51,7 +55,7 @@ submitSearch(){
    
   }else{
     
-        BooksInfo.search(query).then(response => {
+        BooksInfo.search(query.trim()).then(response => {
            
           if(response.error) {
             alert('No match try again');
@@ -60,10 +64,13 @@ submitSearch(){
             
             
           }else{
+
           const Bfilter = this.state.books  
-            response.forEach(b => {
+            
+          response.forEach(b => {
               
-              let f = Bfilter.filter(B => B.id == b.id);
+              let f = Bfilter.filter(B => B.id === b.id);
+              
               if(f[0]) {
                 
                 b.shelf = f[0].shelf;
@@ -71,25 +78,27 @@ submitSearch(){
       
               }
               else{
-                return this.newMethod;
+                
+                return this.setState({ results: response });
               }
             });
 
-            this.newMethod();
-            return this.setState({ results: response });
+            
+            
           }
         });
       }
 }
 
- modifyBook = (book, shelf) => {
+ modifyBook = (book,shelf) => {
+
     BooksInfo.update(book, shelf)
       .then(response => {
         book.shelf = shelf;
         this.setState(state => ({
-          books: state.books.filter(b => b.id == book.id).concat([book])
+          books: state.books.filter(b => b.id !== book.id).concat([book])
        
-        }));
+        })); 
       });
   };
 
@@ -132,11 +141,13 @@ submitSearch(){
             <div className="list-books-content">
               <div>
                
-                <Shelf set modifyBook={this.newMethod} name="Currently Reading" books={this.state.books.filter(b => b.shelf == "currentlyReading")} />
+                <Shelf set modifyBook={this.modifyBook} name="Currently Reading" books={this.state.books.filter(b => b.shelf === "currentlyReading")} />
 
-                <Shelf set modifyBook={this.newMethod}  name="I Want to Read" books={this.state.books.filter(b => b.shelf == "wantToRead")} />
+                <Shelf set modifyBook={this.modifyBook}  name="I Want to Read" books={this.state.books.filter(b => b.shelf === "wantToRead")} />
                  
-                <Shelf set modifyBook={this.newMethod} name="I have Read" books={this.state.books.filter(b => b.shelf == "read")} />    
+                <Shelf set modifyBook={this.modifyBook} name="I have Read" books={this.state.books.filter(b => b.shelf === "read")} />   
+
+                
               </div>
             </div>
 

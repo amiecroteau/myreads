@@ -73,11 +73,14 @@ submitSearch(){
               
               if(f[0]) {
                 
+                
                 b.shelf = f[0].shelf;
-               
+
+               Bfilter.shelf.filter(b => b.id !== b.id).concat([b]);
       
               }
               else{
+             
                 
                 return this.setState({ results: response });
               }
